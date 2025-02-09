@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from movie_app import views
 
 urlpatterns = [
@@ -10,7 +10,10 @@ urlpatterns = [
 
     path('api/v1/movies/', views.movie_list_view),
     path('api/v1/movies/<int:id>/', views.movie_detail_view),
+    path('api/v1/movies/reviews/', views.movie_reviews_list_view),
 
     path('api/v1/reviews/', views.review_list_view),
     path('api/v1/reviews/<int:id>/', views.review_detail_view),
+
 ]
+
