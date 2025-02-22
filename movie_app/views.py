@@ -105,3 +105,34 @@ def review_detail_view(request, id):
     elif request.method == 'DELETE':
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#регистер
+@api_view(["POST"])
+def register_user(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        return Response({"message": "Пользователь создан. Проверьте код подтверждения."}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#подтверждение
+@api_view(["POST"])
+def confirm_user(request):
+    serializer = ConfirmUserSerializer(data=request.data)
+    if serializer.is_valid():
+        user = CustomUser.objects.get(username=request.data["username"])
+        user.is_active = True
+        user.confirmation_code = ""
+        user.save()
+        return Response({"message": "Аккаунт подтвержден."}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#авторизация
+@api_view(["POST"])
+def login_user(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        user = serializer.validated_data["user"]
+        login(request, user)
+        return Response({"message": "Вход выполнен успешно."}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

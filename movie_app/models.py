@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
 class Director(models.Model):
     name = models.CharField(max_length=255)
@@ -39,3 +40,10 @@ class Review(models.Model):
 
     def __str__(self):
         return f'Review for {self.movie.title} - {self.get_stars_display()}'
+
+
+class CustomUser(AbstractUser):
+    confirmation_code = models.CharField(max_length=6, blank=True, null=True)
+
+    groups = models.ManyToManyField(Group, related_name="custom_users", blank=True)
+    user_permissions = models.ManyToManyField(Permission, related_name="custom_users_permissions", blank=True)

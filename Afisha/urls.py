@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from movie_app import views
+from movie_app.views import register_user, confirm_user, login_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,4 +17,8 @@ urlpatterns = [
     # Reviews
     path('api/v1/reviews/', views.review_list_view),
     path('api/v1/reviews/<int:id>/', views.review_detail_view),
+
+    path("api/v1/users/register/", register_user, name="register"),
+    path("api/v1/users/confirm/", confirm_user, name="confirm"),
+    path("api/v1/users/login/", login_user, name="login"),
 ]
